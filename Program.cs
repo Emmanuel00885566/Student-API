@@ -13,14 +13,12 @@ builder.Services.AddControllers();
 
 var app = builder.Build();
 
-// create DB if missing
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
     db.Database.EnsureCreated();
 }
 
-// Global exception handler - returns JSON {error: "..."}
 app.UseExceptionHandler(errorApp =>
 {
     errorApp.Run(async context =>
@@ -34,7 +32,7 @@ app.UseExceptionHandler(errorApp =>
         var result = JsonSerializer.Serialize(new
         {
             error = "An unexpected error occurred. Try again later.",
-            detail = ex?.Message // in dev you can include this; remove in production
+            detail = ex?.Message 
         });
 
         await context.Response.WriteAsync(result);

@@ -16,14 +16,12 @@ namespace StudentApi.Controllers
             _context = context;
         }
 
-        // GET: api/students  -> Get all students
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Student>>> GetStudents()
         {
             return await _context.Students.ToListAsync();
         }
 
-        // GET: api/students/{id} -> Get one student
         [HttpGet("{id}")]
         public async Task<ActionResult<Student>> GetStudent(int id)
         {
@@ -32,11 +30,9 @@ namespace StudentApi.Controllers
             return Ok(student);
         }
 
-        // POST: api/students -> Create student
         [HttpPost]
         public async Task<ActionResult<Student>> PostStudent([FromBody] Student student)
         {
-            // Basic validation
             if (string.IsNullOrWhiteSpace(student.Name))
                 return BadRequest(new { message = "Name is required" });
 
@@ -55,13 +51,11 @@ namespace StudentApi.Controllers
             return CreatedAtAction(nameof(GetStudent), new { id = student.Id }, student);
         }
 
-        // PUT: api/students/{id} -> Update existing student
         [HttpPut("{id}")]
         public async Task<ActionResult<Student>> PutStudent(int id, [FromBody] Student updated)
         {
             if (updated is null) return BadRequest(new { message = "Request body is empty" });
 
-            // Validate incoming data
             if (string.IsNullOrWhiteSpace(updated.Name))
                 return BadRequest(new { message = "Name is required" });
 
@@ -77,7 +71,6 @@ namespace StudentApi.Controllers
             var existing = await _context.Students.FindAsync(id);
             if (existing == null) return NotFound(new { message = "Student not found" });
 
-            // update fields
             existing.Name = updated.Name;
             existing.Age = updated.Age;
             existing.Course = updated.Course;
@@ -88,7 +81,6 @@ namespace StudentApi.Controllers
             return Ok(existing);
         }
 
-        // DELETE: api/students/{id} -> Delete a student
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteStudent(int id)
         {
